@@ -12,10 +12,7 @@ public class ApiDemo2 {
 
         HttpClient client = HttpClient.newHttpClient();
 
-        //String url = "https://www.boredapi.com/api/activity"; // skift pr. øvelse
         //String url = "https://bored-api.appbrewery.com/random";
-        //String url = "https://raw.githubusercontent.com/Tine-m/workshop-api/main/data/activity.json?t=" +
-           //     System.currentTimeMillis(); //clear browser cache
         String url = "https://api.chucknorris.io/jokes/random";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -26,8 +23,9 @@ public class ApiDemo2 {
         System.out.println("Statuskode: " + response.statusCode());
         System.out.println("Raw JSON response!:");
         System.out.println(response.body());
-        //Gson
-        System.out.println("Gson: ");
+
+        //Gson librabry converts JSON to object that Java understands
+        System.out.println("\nGson: ");
         JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
         System.out.println("Joke: " + json.get("value").getAsString());
     }

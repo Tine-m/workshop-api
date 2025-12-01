@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -7,33 +8,33 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class ApiDemo1 {
+public class JokeAPIDemo {
+
     public static void main(String[] args) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
 
-        String url = "https://bored-api.appbrewery.com/random";
-        //String url = "https://www.boredapi.com/api/activity"; //change url for another API service
-        //String url = "https://raw.githubusercontent.com/Tine-m/workshop-api/main/data/activity.json?t=" +
-        //     System.currentTimeMillis(); //clear browser cache
-        // String url = "https://api.chucknorris.io/jokes/random";
-
-
-        // Build request
+        String url = "https://v2.jokeapi.dev/joke/Any?safe-mode";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
                 .build();
 
-        // Send request amd get response as string
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         System.out.println("Statuskode: " + response.statusCode());
         System.out.println("Raw JSON response!:");
         System.out.println(response.body());
 
-        // parse JSON into object
-        System.out.println("\nGson: ");
-        JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
-        System.out.println("Activity: " + json.get("activity").getAsString());
+        // Opret Gson-objekt
+        Gson gson = new Gson();
+        Joke j = gson.fromJson(response.body(), Joke.class);
+
+        if ("single".equals(j.type)) {
+            System.out.println("Joke: " + j.joke);
+        } else if ("twopart".equals(j.type)) {
+            System.out.println("Setup: " + j.setup);
+            System.out.println("Punchline: " + j.delivery);
+        }
+
     }
 }
